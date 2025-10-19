@@ -16,14 +16,8 @@ Reikalavimai:
 Papildiniai: Kombo daugikliai, „klaidų	serijos“ baudos, lygių progresija
 */
 
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import javax.swing.JButton; //for the button
-import javax.swing.JFrame; //for the UI window
-
 public class Main {
     public static void main(String[] args) {
-        GameWindow gameWindow = new GameWindow();
-        gameWindow.show();
+        new MyFrame();
     }
 }
