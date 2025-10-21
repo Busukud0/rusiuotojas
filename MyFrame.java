@@ -3,15 +3,12 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class MyFrame extends JFrame implements KeyListener {
-
-    GameLogic gameLogic;
-
-    MyPanel panel;
+    private GameLogic gameLogic = GameLogic.getInstance();
+    private MyPanel panel;
     MyFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         panel = new MyPanel();
-        gameLogic = new GameLogic();
 
         this.addKeyListener(this);
         this.setFocusable(true);
@@ -32,5 +29,6 @@ public class MyFrame extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         gameLogic.handleKeyPress(e.getKeyChar());
+        panel.repaint();
     }
 }
