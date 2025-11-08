@@ -1,13 +1,13 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 public class MyFrame extends JFrame implements KeyListener {
-    private GameLogic gameLogic = GameLogic.getInstance();
+    private GameLogic game = GameLogic.getInstance();
+    private UserInterface ui = new UserInterface();
     private MyPanel panel;
-    MyFrame() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    public MyFrame() {
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         panel = new MyPanel();
 
         this.addKeyListener(this);
@@ -19,7 +19,6 @@ public class MyFrame extends JFrame implements KeyListener {
         this.setVisible(true);
     }
 
-    // key listener methods
     @Override
     public void keyTyped(KeyEvent e) {}
 
@@ -28,7 +27,8 @@ public class MyFrame extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        gameLogic.handleKeyPress(e.getKeyChar());
+        game.handleKeyPress(e.getKeyChar());
+        ui.handleKeyPress(e.getKeyChar());
         panel.repaint();
     }
 }
