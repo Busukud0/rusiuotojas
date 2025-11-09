@@ -13,7 +13,8 @@ public class MyPanel extends JPanel {
 
     public MyPanel() {
         this.setPreferredSize(new Dimension(GameLogic.scrWidth, GameLogic.scrHeight));
-        setBackground(Color.BLACK);
+        setBackground(new Color(30, 30, 30));
+
         
         // Start update loop
         lastTime = System.nanoTime();

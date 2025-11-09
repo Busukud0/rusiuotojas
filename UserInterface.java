@@ -8,8 +8,8 @@ import java.awt.BasicStroke;
 
 public class UserInterface {
     private GameLogic game = GameLogic.getInstance();
-    private final char  restartKey = '1',
-                        exitKey = '2';
+    private final char  restartKey = '4',
+                        exitKey = '5';
     private Font    boldFont = new Font("Arial", Font.BOLD, 30),
                     plainFont = new Font("Arial", Font.PLAIN, 20),
                     scoreFont = new Font("Arial", Font.PLAIN, 80);

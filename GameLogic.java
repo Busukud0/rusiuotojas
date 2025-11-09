@@ -104,6 +104,7 @@ public class GameLogic {
                         lives -= 1;
                         if(scoreMultiplier>maxScoreMultiplier) maxScoreMultiplier=scoreMultiplier;
                         scoreMultiplier = 1;
+                        ballSpeedMultiplier -= (ballSpeedMultiplier - 1) / 2;
                     }
                 }
             }
