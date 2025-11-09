@@ -53,7 +53,7 @@ public class UserInterface {
 
         g.setFont(plainFont);
 
-        drawCentered(g, "HIGH SCORE: " + (int) game.getHighScore(), 90);
+        drawCentered(g, "HIGH SCORE: " + String.format("%.0f", game.getHighScore()), 90);
 
         drawCentered(g, "Press " + restartKey + " to restart", 330);
         drawCentered(g, "Press " + exitKey + " to exit", 380);

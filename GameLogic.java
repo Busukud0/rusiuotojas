@@ -16,8 +16,8 @@ public class GameLogic {
 
     private static final GameLogic instance = new GameLogic();
 
-    private double score, scoreMultiplier, ballSpeedMultiplier, maxScoreMultiplier=0;
-    private int lives, lever, highScore=0;
+    private double score, scoreMultiplier, ballSpeedMultiplier, maxScoreMultiplier=0, highScore=0;
+    private int lives, lever;
     private boolean isPaused, showWelcomeMenu=true;
 
     private Ball ball;
@@ -65,7 +65,7 @@ public class GameLogic {
 
     public void addBox(Box box) { boxes.add(box); }
 
-    public int getHighScore() { return highScore; }
+    public double getHighScore() { return highScore; }
     public double getMaxScoreMultiplier() { return maxScoreMultiplier; }
     public int getLever() { return lever; }
     public Ball getBall() { return ball; }
@@ -109,7 +109,7 @@ public class GameLogic {
             }
             spawnBall();
         }
-        if (score > highScore) highScore = (int)score;
+        if (score > highScore) highScore = score;
     }
 
     public void draw(Graphics2D g2D) {
