@@ -3,7 +3,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.*;
 
-
 public class GameLogic {
     public static final int scrWidth = 500;
     public static final int scrHeight = 500;
@@ -94,8 +93,7 @@ public class GameLogic {
         if (ball.getPrevY() < bottomY && ball.getY() >= bottomY) {
             for(int i=0; i<boxes.size(); i++) {
                 if(ball.getX()>boxes.get(i).getX() && ball.getX()<boxes.get(i).getX()+boxes.get(i).getSize()) { 
-                    if(boxes.get(i).getColor() == ball.getColor())
-                    {
+                    if(ball.getColor()==Color.GRAY || boxes.get(i).getColor() == ball.getColor()) {
                         score += 1 * scoreMultiplier;
                         scoreMultiplier *= 1.05;
                         ballSpeedMultiplier*=1.02;
@@ -158,7 +156,7 @@ public class GameLogic {
     private int rightX() { return gap() + boxSize + gap() + boxSize + gap() + boxSize / 2; }
 
     private Color randomBallColor() {
-        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE };
+        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.GRAY };
         return colors[new Random().nextInt(colors.length)];
     }
 

@@ -51,13 +51,4 @@ public class MyPanel extends JPanel {
         }
     }
 
-    private Color randomBallColor() {
-        return switch ((int)(Math.random() * 3)) {
-            case 0 -> Color.RED;
-            case 1 -> Color.GREEN;
-            default -> Color.BLUE;
-        };
-    }
-
-    
 }
