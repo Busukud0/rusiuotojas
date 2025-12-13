@@ -27,18 +27,6 @@ public class Ball {
         g.fillOval((int)x, (int)y, size, size);
     }
 
-    public double getCenter() {
-        return x + size / 2.0;
-    }
-
-    public void setVx(double vx) {
-        this.vx = vx;
-    }
-
-    public void setVy(double vy) {
-        this.vy = vy;
-    }
-
     public void setAngle(double angleDegrees) {
         double totalSpeed = vy*3;
         double angleRad = Math.toRadians(angleDegrees);
@@ -46,23 +34,11 @@ public class Ball {
         vy = totalSpeed * Math.cos(angleRad);
     }
 
-    public double getVy() {
-        return vy;
-    }
-
-    public double getY() {
-        return y;
-    }
-    public double getX() {
-        return x;
-    }
-
-    public double getPrevY() {
-        return prevY;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
+    //getters
+    public double getCenter() { return x + size / 2.0; }
+    public double getVy() { return vy; }
+    public double getY() { return y; }
+    public double getX() { return x; }
+    public double getPrevY() { return prevY; }
+    public Color getColor() { return color; }
 }

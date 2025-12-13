@@ -3,20 +3,19 @@ import java.awt.event.*;
 
 public class MyFrame extends JFrame implements KeyListener {
     private GameLogic game = GameLogic.getInstance();
-    private UserInterface ui = new UserInterface();
+    private UserInterface ui = new UserInterface(game);
     private MyPanel panel;
 
     public MyFrame() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        panel = new MyPanel();
+        panel = new MyPanel(game, ui);
 
         this.addKeyListener(this);
         this.setFocusable(true);
-        this.requestFocusInWindow();
-
         this.add(panel);
         this.pack();
         this.setVisible(true);
+        this.requestFocusInWindow();
     }
 
     @Override

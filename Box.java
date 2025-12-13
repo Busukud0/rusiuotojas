@@ -1,8 +1,8 @@
 import java.awt.*;
 
 public class Box {
-    private int x, y, size;
-    private Color color;
+    private final int x, y, size;
+    private final Color color;
 
     public Box(int x, int y, int size, Color color) {
         this.x = x;
@@ -16,23 +16,10 @@ public class Box {
         g.fillRect(x, y, size, size);
     }
 
-    public int getCenterX() {
-        return x + size / 2;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public Color getColor() {
-        return color;
-    }
+    //getters
+    public int getCenterX() { return x + size / 2; }
+    public int getY() { return y; }
+    public int getX() { return x; }
+    public int getSize() { return size; }
+    public Color getColor() { return color; }
 }
