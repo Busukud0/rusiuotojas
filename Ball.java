@@ -1,27 +1,24 @@
 import java.awt.*;
 
-public class Ball {
-    private double x, y, prevY;
-    private int size;
+public class Ball extends GameObject {
+    private double prevY;
     private double vy = 200;
     private double vx = 0;
-    private Color color;
 
     public Ball(double x, double y, int size, Color color, double multiplier) {
-        this.x = x - size/2.0;
-        this.y = y - size/2.0;
-        this.size = size;
-        this.color = color;
+        super(x - size/2.0, y - size/2.0, size, color);
         this.prevY = y;
         this.vy *= multiplier;
     }
 
+    @Override
     public void update(double dt) {
         prevY = y;
         y += vy * dt;
         x += vx * dt;
     }
 
+    @Override
     public void draw(Graphics2D g) {
         g.setColor(color);
         g.fillOval((int)x, (int)y, size, size);
@@ -37,8 +34,5 @@ public class Ball {
     //getters
     public double getCenter() { return x + size / 2.0; }
     public double getVy() { return vy; }
-    public double getY() { return y; }
-    public double getX() { return x; }
     public double getPrevY() { return prevY; }
-    public Color getColor() { return color; }
 }

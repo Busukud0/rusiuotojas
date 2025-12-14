@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.util.*;
 
@@ -19,10 +18,26 @@ public class GameLogic {
 
     private Ball ball;
     private final List<Box> boxes = new ArrayList<>();
+    private final List<GameObject> allObjects = new ArrayList<>();
+    private ScoringStrategy scoringStrategy = new NormalScoring();
 
     private GameLogic() {
-        addBoxes();
         spawnBall();
+        addBoxes();
+    }
+
+    public void restartGame() {
+        boxes.clear();
+        allObjects.clear();
+        score = 0;
+        lives = 3;
+        scoreMultiplier = 1;
+        ballSpeedMultiplier = 1;
+        lever = 1;
+        spawnBall();
+        addBoxes();
+        isPaused = false;
+        showWelcomeMenu = false;
     }
 
     public void update(double dt) {
@@ -35,8 +50,8 @@ public class GameLogic {
             for(int i=0; i<boxes.size(); i++) {
                 if(ballAndBoxCollide(i)) { 
                     if(boxesMatchColor(i)) {
-                        score += 1 * scoreMultiplier;
-                        scoreMultiplier *= 1.05;
+                        score = scoringStrategy.calculateScore(score, scoreMultiplier);
+                        scoreMultiplier = scoringStrategy.updateMultiplier(scoreMultiplier);
                         ballSpeedMultiplier*=1.02;
                     }
                     else {
@@ -54,22 +69,15 @@ public class GameLogic {
     }
 
     public void draw(Graphics2D g2D) {
-        drawObjects(g2D);
         drawLever(g2D);
-        drawLines(g2D);  
-    }
-
-    public void restartGame() {
-        boxes.clear();
-        addBoxes();
-        score = 0;
-        lives = 3;
-        scoreMultiplier = 1;
-        ballSpeedMultiplier = 1;
-        lever = 1;
-        spawnBall();
-        isPaused = false;
-        showWelcomeMenu = false;
+        drawLines(g2D);
+        if (ball != null) {
+            ball.draw(g2D);
+        }
+        
+        for(Box box : boxes) {
+            box.draw(g2D);
+        }
     }
 
     public void handleKeyPress(char key) {
@@ -80,27 +88,38 @@ public class GameLogic {
         }
     }
 
-    private void spawnBall() {
-        ball = new Ball(scrWidth / 2.0, 0, 40, randomBallColor(), ballSpeedMultiplier);
-    }
-
-    private void addBoxes() {
-        boxes.add(new Box(gap(), bottomY, boxSize, Color.RED));
-        boxes.add(new Box(gap() + boxSize + gap(), bottomY, boxSize, Color.GREEN));
-        boxes.add(new Box(gap() + boxSize + gap() + boxSize + gap(), bottomY, boxSize, Color.BLUE));
-    }
-
-    private void drawObjects(Graphics2D g2D) {
-        for(Box box : boxes) box.draw(g2D);
-        ball.draw(g2D);
-    }
-
     private void drawLines(Graphics2D g2D) {
         g2D.setColor(Color.WHITE);
         drawUpperMiddleLines(g2D);
         drawLeftLines(g2D);
         drawLowerMiddleLines(g2D);
         drawRightLines(g2D);
+    }
+
+    private void drawLever(Graphics2D g2D) {
+        switch (lever) {
+            case 0 -> drawLeverLeft(g2D);
+            case 1 -> drawLeverMiddle(g2D);
+            case 2 -> drawLeverRight(g2D);
+        }
+    }
+
+    private void spawnBall() {
+        if (ball != null) { allObjects.remove(ball); }
+        ball = BallFactory.createBall(scrWidth / 2.0, 0, ballSpeedMultiplier);
+        allObjects.add(0, ball);
+    }
+
+    private void addBoxes() {
+        addBox(0, Color.RED);
+        addBox(1, Color.GREEN);
+        addBox(2, Color.BLUE);
+    }
+
+    private void addBox(int position, Color color) {
+        Box box = new Box(gap() + position * (boxSize + gap()), bottomY, boxSize, color);
+        boxes.add(box);
+        allObjects.add(box);
     }
 
     private void drawUpperMiddleLines(Graphics2D g2D) {
@@ -118,14 +137,6 @@ public class GameLogic {
     private void drawRightLines(Graphics2D g2D) {
         g2D.drawLine(scrWidth / 2 + lineOffset(), 200 + lineOffset() * 2, rightX() - lineOffset(), bottomY);
         g2D.drawLine(scrWidth / 2 + lineOffset(), 200, rightX() + lineOffset(), bottomY);
-    }
-
-    private void drawLever(Graphics2D g2D) {
-        switch (lever) {
-            case 0 -> drawLeverLeft(g2D);
-            case 1 -> drawLeverMiddle(g2D);
-            case 2 -> drawLeverRight(g2D);
-        }
     }
 
     private void drawLeverLeft(Graphics2D g2D) {
@@ -160,13 +171,8 @@ public class GameLogic {
         return ball.getColor()==Color.GRAY || boxes.get(i).getColor() == ball.getColor();
     }
 
-    private boolean ballAndBoxCollide(int i) { 
-        return ball.getX()>boxes.get(i).getX() && ball.getX()<boxes.get(i).getX()+boxes.get(i).getSize();
-    }
-
-    private Color randomBallColor() {
-        Color[] colors = { Color.RED, Color.GREEN, Color.BLUE, Color.GRAY };
-        return colors[new Random().nextInt(colors.length)];
+    private boolean ballAndBoxCollide(int i) {
+        return boxes.get(i).checkCollision(ball.getX(), ball.getY());
     }
 
     //calculations
@@ -188,4 +194,5 @@ public class GameLogic {
     public int getScreenWidth() { return scrWidth; }
     public int getScreenHeight() { return scrHeight; }
     public static GameLogic getInstance() { return instance; }
+    
 }

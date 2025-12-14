@@ -1,25 +1,27 @@
 import java.awt.*;
 
-public class Box {
-    private final int x, y, size;
-    private final Color color;
-
+public class Box extends GameObject implements Collidable {
+    
     public Box(int x, int y, int size, Color color) {
-        this.x = x;
-        this.y = y;
-        this.size = size;
-        this.color = color;
+        super(x, y, size, color);
     }
-
+    
+    @Override
     public void draw(Graphics2D g) {
         g.setColor(color);
-        g.fillRect(x, y, size, size);
+        g.fillRect((int)x, (int)y, size, size);
     }
-
+    
+    @Override
+    public void update(double dt) {
+        // Box nejuda
+    }
+    
+    @Override
+    public boolean checkCollision(double pointX, double pointY) {
+        return pointX > x && pointX < x + size;
+    }
+    
     //getters
-    public int getCenterX() { return x + size / 2; }
-    public int getY() { return y; }
-    public int getX() { return x; }
-    public int getSize() { return size; }
-    public Color getColor() { return color; }
+    public int getCenterX() { return (int)(x + size / 2); }
 }
