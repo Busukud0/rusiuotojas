@@ -12,14 +12,15 @@ public class GameLogic {
     private final int bottomY = 350;
     private final int leverY = 180;
 
-    private double score, scoreMultiplier, ballSpeedMultiplier, maxScoreMultiplier=0, highScore=0;
+    private double score, scoreMultiplier, ballSpeedMultiplier, maxScoreMultiplier=0, highScore=0, speedMultiplierLimit = 2;
     private int lives, lever;
     private boolean isPaused, showWelcomeMenu=true;
 
     private Ball ball;
     private final List<Box> boxes = new ArrayList<>();
     private final List<GameObject> allObjects = new ArrayList<>();
-    private ScoringStrategy scoringStrategy = new NormalScoring();
+    private ScoringStrategy normalScoring = new NormalScoring();
+    private ScoringStrategy bonusScoring = new BonusScoring();
 
     private GameLogic() {
         spawnBall();
@@ -50,9 +51,15 @@ public class GameLogic {
             for(int i=0; i<boxes.size(); i++) {
                 if(ballAndBoxCollide(i)) { 
                     if(boxesMatchColor(i)) {
-                        score = scoringStrategy.calculateScore(score, scoreMultiplier);
-                        scoreMultiplier = scoringStrategy.updateMultiplier(scoreMultiplier);
-                        ballSpeedMultiplier*=1.02;
+                        if (ballSpeedMultiplier < speedMultiplierLimit) {
+                            score = normalScoring.calculateScore(score, scoreMultiplier);
+                            scoreMultiplier = normalScoring.updateMultiplier(scoreMultiplier);
+                            ballSpeedMultiplier*=1.04;
+                        } else {
+                            score = bonusScoring.calculateScore(score, scoreMultiplier);
+                            scoreMultiplier = bonusScoring.updateMultiplier(scoreMultiplier);
+                        }
+                        
                     }
                     else {
                         lives -= 1;
@@ -182,6 +189,14 @@ public class GameLogic {
     private int middleX() { return gap() + boxSize + gap() + boxSize / 2; }
     private int rightX() { return gap() + boxSize + gap() + boxSize + gap() + boxSize / 2; }
 
+    // test helper
+    public void setBall(double x, double y, Color color) {
+        if (ball != null) allObjects.remove(ball);
+        ball = new Ball(x, y, ball.getSize(), color, 1);
+        allObjects.add(0, ball);
+    }
+
+
     //GETTERS
     public boolean isPaused() { return isPaused; }
     public boolean showWelcomeMenu() { return showWelcomeMenu; }
@@ -191,8 +206,12 @@ public class GameLogic {
     public int getLives() { return lives; }
     public double getScore() { return score; }
     public double getScoreMultiplier() { return scoreMultiplier; }
+    public double getBallSpeedMultiplier() { return ballSpeedMultiplier; }
+    public double getSpeedMultiplierLimit() { return speedMultiplierLimit; }
     public int getScreenWidth() { return scrWidth; }
     public int getScreenHeight() { return scrHeight; }
     public static GameLogic getInstance() { return instance; }
-    
+    public int getBottomY() { return bottomY; }
+    public Ball getBall() { return ball; }
+    public List<Box> getBoxes() { return Collections.unmodifiableList(boxes); }
 }

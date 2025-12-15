@@ -32,7 +32,8 @@ public class UserInterface {
     public void drawValues(Graphics2D g) {
        drawLives(g);
        drawScore(g);
-       drawScoreMultiplier(g); 
+       drawScoreMultiplier(g);
+       drawSpeedMultiplier(g);
     }
 
     private void drawLives(Graphics2D g) {
@@ -47,17 +48,28 @@ public class UserInterface {
     }
     private void drawScoreMultiplier(Graphics2D g) {
         g.setFont(plainFont);
-        g.setColor(Color.GRAY);
+        g.setColor(Color.YELLOW);
         g.drawString(String.format("%.2f", game.getScoreMultiplier()) + "X", 50, 180);
     }
 
+    private void drawSpeedMultiplier(Graphics2D g) {
+        g.setFont(plainFont);
+        if(game.getBallSpeedMultiplier() < game.getSpeedMultiplierLimit()) {
+            g.setColor(Color.GRAY);
+            g.drawString(String.format("%.2f", game.getBallSpeedMultiplier()) + "X", 400, 180);
+        } else {
+            g.setColor(Color.WHITE);
+            g.drawString("MAX", 400, 180);
+        }
+    }
+
     public void drawGameOverMenu(Graphics2D g) {
-        drawCentered(g, "GAME OVER", 280, Color.RED, boldFont);
-        drawCentered(g, "HIGH SCORE: " + String.format("%.0f", game.getHighScore()), 90, Color.WHITE, plainFont);
-        drawCentered(g, "Press " + restartKey + " to restart", 330, Color.WHITE, plainFont);
-        drawCentered(g, "Press " + exitKey + " to exit", 380, Color.WHITE, plainFont);
-        drawCentered(g, "HIGHEST MULTIPLIER: " + String.format("%.2f", game.getMaxScoreMultiplier()) + "X", 120, Color.GRAY, plainFont);
-        drawCentered(g, String.format("%.0f", game.getScore()), 215, Color.GREEN, scoreFont);
+        drawCentered(g, "GAME OVER", 290, Color.RED, boldFont);
+        drawCentered(g, "HIGH SCORE: " + String.format("%.0f", game.getHighScore()), 100, Color.WHITE, plainFont);
+        drawCentered(g, "Press " + restartKey + " to restart", 340, Color.WHITE, plainFont);
+        drawCentered(g, "Press " + exitKey + " to exit", 390, Color.WHITE, plainFont);
+        drawCentered(g, "MAX SCORE MULTIPLIER: " + String.format("%.2f", game.getMaxScoreMultiplier()) + "X", 130, Color.GRAY, plainFont);
+        drawCentered(g, String.format("%.0f", game.getScore()), 225, Color.GREEN, scoreFont);
     }
 
     public void drawWelcomeMenu(Graphics2D g) {

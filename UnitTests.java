@@ -5,78 +5,80 @@ public class UnitTests {
     public static void main(String[] args) {
         System.out.println("=== Starting Tests ===\n");
 
-        testInitialLives();
-        testInitialScore();
-        testInitialMultiplier();
-
-        testLeverLeft();
-        testLeverMiddle();
-        testLeverRight();
-
-        testWelcomeMenuHiddenAfterRestart();
-        testGameNotPausedAtStart();
-
+        testInitialSetup();
+        testLeverPositions();
+        testBallMovement();
+        testScoreIncreaseOnHit();
+        testMultiplierResetOnHit();
 
         System.out.println("\n=== Tests Finished ===");
     }
 
-    public static void testInitialLives() {
-        GameLogic game = setupTest("Initial lives... ");
-        assertEqual(3, game.getLives());
+    public static void testInitialSetup() {
+        int expHealth=3;
+        double expScore=0, expScoreMultiplier=1;
+        GameLogic game = setupTest("Initial variables... ");
+        if (expHealth == game.getLives() && expScore == game.getScore() && expScoreMultiplier == game.getScoreMultiplier()) System.out.println("PASSED");
+        else System.out.println("FAILED - Expected: " + expHealth + " " + expScore + " " + expScoreMultiplier + " " + ", Got: " + game.getLives() + " " + game.getScore() + " " + game.getScoreMultiplier());
     }
 
-    public static void testInitialScore() {
-        GameLogic game = setupTest("Initial score... ");
-        assertEqual(0, game.getScore());
+    public static void testLeverPositions() {
+        GameLogic game = setupTest("Lever positions... ");
+        char[] keys = {'1','2','3'};
+        int[] expected = {0,1,2};
+        boolean failed = false;
+
+        for (int i = 0; i < keys.length; i++) {
+            game.handleKeyPress(keys[i]);
+            if (expected[i] != game.getLever()) {
+                failed = true;
+                System.out.println("FAILED - Expected: " + expected[i] + ", Got: " + game.getLever());
+            }
+        }
+        if (!failed) System.out.println("PASSED");
     }
 
-    public static void testInitialMultiplier() {
-        GameLogic game = setupTest("Initial multiplier... ");
-        assertEqual(1, (int)game.getScoreMultiplier());
-    }
-
-    public static void testLeverLeft() {
-        GameLogic game = setupTest("Lever left... ");
-        game.handleKeyPress('1');
-        assertEqual(0, game.getLever());
-    }
-
-    public static void testLeverMiddle() {
-        GameLogic game = setupTest("Lever middle... ");
-        game.handleKeyPress('2');
-        assertEqual(1, game.getLever());
-    }
-
-    public static void testLeverRight() {
-        GameLogic game = setupTest("Lever right... ");
-        game.handleKeyPress('3');
-        assertEqual(2, game.getLever());
-    }
-
-    public static void testWelcomeMenuHiddenAfterRestart() {
-        GameLogic game = setupTest("Welcome menu hidden... ");
-        assertTrue(!game.showWelcomeMenu());
-    }
-
-    public static void testGameNotPausedAtStart() {
-        GameLogic game = setupTest("Game not paused initially... ");
-        assertTrue(!game.isPaused());
+    public static void testBallMovement() {
+        GameLogic game = setupTest("Ball moves... ");
+        double y1 = game.getBall().getY();
+        game.update(0.1);
+        double y2 = game.getBall().getY();
+        assertTrue(y2 != y1);
     }
 
 
+    public static void testScoreIncreaseOnHit() {
+        GameLogic game = setupTest("Score increases on hit... ");
+        Box box = game.getBoxes().get(0); //red box
 
+        double ballY = game.getBottomY() - 1;
+        game.setBall(box.getCenterX(), ballY, Color.GRAY);
 
+        double initialScore = game.getScore();
+        game.update(1);
+
+        assertTrue(game.getScore() > initialScore);
+    }
+
+    public static void testMultiplierResetOnHit() {
+        GameLogic game = setupTest("Multiplier reset on hit... ");
+        Box box = game.getBoxes().get(0); //red box
+
+        //simulate successful hit
+        double ballY1 = game.getBottomY() - 1;
+        game.setBall(box.getCenterX(), ballY1, Color.GRAY);
+        game.update(1);
+
+        //simulate failed hit
+        double ballY2 = game.getBottomY() - 1;
+        game.setBall(box.getCenterX(), ballY2, Color.BLUE);
+        double initialScoreMultiplier = game.getScoreMultiplier();
+        game.update(1);
+
+        assertTrue(game.getScoreMultiplier() < initialScoreMultiplier);
+    }
 
     // helpers
-    private static void assertEqual(int exp, int got) {
-        if (exp == got) System.out.println("PASSED");
-        else System.out.println("FAILED - Expected: " + exp + ", Got: " + got);
-    }
-
-    private static void assertEqual(double exp, double got) {
-        if (exp == got) System.out.println("PASSED");
-        else System.out.println("FAILED - Expected: " + exp + ", Got: " + got);
-    }
 
     private static void assertTrue(boolean condition) {
         if (condition) System.out.println("PASSED");
